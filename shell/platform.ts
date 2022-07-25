@@ -1,4 +1,4 @@
-import { EOL } from 'https://deno.land/std@0.145.0/fs/eol.ts';
+import { EOL } from '../deps.ts';
 
 /** Any type of OS supported by Deno and potentially returned by {@link Deno.build.os}. */
 export type OsType = typeof Deno.build.os;

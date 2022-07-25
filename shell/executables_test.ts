@@ -1,4 +1,4 @@
-import { assert, assertRejects } from 'https://deno.land/std@0.144.0/testing/asserts.ts';
+import { assert, assertRejects } from '../testing_deps.ts';
 import { makeFileExecutable } from './executables.ts';
 import { $ } from './run.ts';
 

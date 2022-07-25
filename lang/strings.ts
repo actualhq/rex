@@ -1,8 +1,10 @@
-import { EOL } from 'https://deno.land/std@0.145.0/fs/eol.ts';
-import { isNil } from './values.ts';
+import { EOL, isNil } from '../deps.ts';
 
 /**
- * Removes a trailing new line (either LF or CRLF) from the string if there is one.
+ * Removes a *single* trailing new line (either LF or CRLF) from the string, if there is one.
+ *
+ * Note: Unlike the `string.trimEnd()` function, this will not remove any other whitespace
+ * characters.
  *
  * @param text The text to be altered
  * @returns The altered text
@@ -38,9 +40,12 @@ export function stripSuffix(text: string, suffix: string): string {
 }
 
 /**
- * Formats the template string with the leading/trailing newlines and largest common line indentations removed.
+ * Tag template function that formats the template string with the leading/trailing newlines and
+ * largest common line indentations removed.
  *
- * This is useful for multiline template strings.
+ * @param literals The literals in the template string (provided by tagged template)
+ * @param values The values in the template string (provided by tagged template)
+ * @returns The rendered and formatted string
  *
  * @example
  * const generatedCode = trimAndDedent`

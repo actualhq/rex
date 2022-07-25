@@ -32,7 +32,7 @@ export type Promised<T extends Record<string, unknown>> = {
  * function readFiles(...filePaths: string[]): Promise<Record<string, string>> {
  *   const promisedFiles: Record<string, Promise<string>> = {};
  *   filePaths.forEach(path => promisedFiles[path] = Deno.readTextFile(path));
- *   return  (promisedFiles);
+ *   return promised(promisedFiles);
  * }
  * const fileContents = await readFiles('foo.txt', 'foo.shasum');
  * ```

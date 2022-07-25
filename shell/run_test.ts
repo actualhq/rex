@@ -1,9 +1,4 @@
-import {
-  assert,
-  assertFalse,
-  assertNotEquals,
-  assertRejects,
-} from 'https://deno.land/std@0.144.0/testing/asserts.ts';
+import { assert, assertFalse, assertNotEquals, assertRejects } from '../testing_deps.ts';
 import { $ } from './run.ts';
 
 Deno.test('executables on path can run', async () => {

@@ -1,4 +1,4 @@
-import { assert, assertFalse } from 'https://deno.land/std@0.144.0/testing/asserts.ts';
+import { assert, assertFalse } from '../testing_deps.ts';
 import { commandExists } from './commands.ts';
 
 Deno.test('built-in commands return true', async () => {
