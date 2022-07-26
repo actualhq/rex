@@ -40,25 +40,22 @@ export function stripSuffix(text: string, suffix: string): string {
 }
 
 /**
- * Tag template function that formats the template string with the leading/trailing newlines and
- * largest common line indentations removed.
+ * Reformats text with the leading/trailing newlines and largest common line indentations removed.
  *
- * @param literals The literals in the template string (provided by tagged template)
- * @param values The values in the template string (provided by tagged template)
- * @returns The rendered and formatted string
+ * @param text The string to be reformatted
+ * @returns The formatted string
  *
  * @example
- * const generatedCode = trimAndDedent`
+ * const generatedCode = trimAndDedent(`
  *   service ${serviceName} {
  *     rpc Delete${subjectName}(Delete${subjectName}Request) returns (Delete${subjectName}Response);
  *     rpc Create${subjectName}(Create${subjectName}Request) returns (Create${subjectName}Response);
  *   }
- * `;
+ * `);
  */
-export function trimAndDedent(literals: TemplateStringsArray, ...values: string[]): string {
-  let alteredText = renderTemplateString(literals, ...values);
+export function trimAndDedent(text: string): string {
   // Trim off empty lines at beginning
-  alteredText = alteredText.replace(INITIAL_EMPTY_LINES_PATTERN, '');
+  let alteredText = text.replace(INITIAL_EMPTY_LINES_PATTERN, '');
 
   // Find indent on first line and trim that prefix off of each line
   const initialIndent = alteredText.match(INITIAL_INDENT_PATTERN);
@@ -69,17 +66,6 @@ export function trimAndDedent(literals: TemplateStringsArray, ...values: string[
 
   // Trim off empty lines at end
   return alteredText.trimEnd();
-}
-
-function renderTemplateString(literals: TemplateStringsArray, ...values: string[]): string {
-  const buffer: string[] = [];
-  for (let i = 0; i < literals.length; i++) {
-    buffer.push(literals[i]);
-    if (!isNil(values[i])) {
-      buffer.push(String(values[i]));
-    }
-  }
-  return buffer.join('');
 }
 
 const INITIAL_EMPTY_LINES_PATTERN = /^[\n\r]+/;
