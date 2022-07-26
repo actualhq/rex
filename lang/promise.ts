@@ -4,7 +4,7 @@
  * Use `await promised(obj) to translate a `Promised<T>` into a `T`.
  */
 export type Promised<T extends Record<string, unknown>> = {
-  [P in keyof T]: T | Promise<T>;
+  [P in keyof T]: T[P] | Promise<T[P]>;
 };
 
 /**
