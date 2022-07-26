@@ -1,4 +1,4 @@
-import { EOL, isNil } from '../deps.ts';
+import { EOL } from '../deps.ts';
 
 /**
  * Removes a *single* trailing new line (either LF or CRLF) from the string, if there is one.
