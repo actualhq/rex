@@ -49,7 +49,7 @@ export async function $(
  * @returns A {@link Promise<ProcessResult>} containing the result state when the process completes.
  */
 $.run = function (
-  command: string[] | string,
+  command: ProcessCommand,
   options: FullUserRunOptions = {},
 ): Promise<ProcessResult> {
   const fullOptions: FullRunOptions = {
@@ -70,7 +70,7 @@ $.run = function (
  * @returns A {@link Promise<PipedProcessResult>} containing the result state and output when the process completes
  */
 $.piped = function (
-  command: string[] | string,
+  command: ProcessCommand,
   options: UserRunOptions = {},
 ): Promise<PipedProcessResult> {
   const fullOptions: PipedRunOptions = {
@@ -93,7 +93,7 @@ $.piped = function (
  * @returns A {@link Promise<ProcessResult>} containing the result state when the process completes
  */
 $.streamed = function (
-  command: string[] | string,
+  command: ProcessCommand,
   options: UserRunOptions = {},
 ): Promise<ProcessResult> {
   const fullOptions: FullRunOptions = {
@@ -113,7 +113,7 @@ $.streamed = function (
  * @returns A {@link Promise<boolean>} that will resolve to `true` if the process had a zero exit code to indicate success
  */
 $.try = async function (
-  command: string[] | string,
+  command: ProcessCommand,
   options: UserTryOptions = {},
 ): Promise<boolean> {
   try {
@@ -164,7 +164,7 @@ async function runInternal(options: FullRunOptions): Promise<ProcessResult> {
   }
 }
 
-function buildCommandArray(command: string | string[]): string[] {
+function buildCommandArray(command: ProcessCommand): string[] {
   if (Array.isArray(command)) {
     return command;
   } else if (Deno.build.os === 'windows') {
