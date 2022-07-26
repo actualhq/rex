@@ -8,6 +8,7 @@ import {
   UserTryOptions,
 } from './run_types.ts';
 import { trimTrailingNewline } from '../lang/strings.ts';
+import { isNil } from '../deps.ts';
 
 interface PipedRunOptions extends FullRunOptions {
   stdout: 'piped';
@@ -140,9 +141,10 @@ function runInternal(options: FullRunOptions): Promise<ProcessResult>;
 async function runInternal(options: FullRunOptions): Promise<ProcessResult> {
   const proc = Deno.run(options);
 
-  const isPiped = options.stdout === 'piped';
-  const stdoutPromise = isPiped ? proc.output() : Promise.resolve(undefined);
-  const stderrPromise = isPiped ? proc.stderrOutput() : Promise.resolve(undefined);
+  const stdoutPromise = options.stdout === 'piped' ? proc.output() : Promise.resolve(undefined);
+  const stderrPromise = options.stderr === 'piped'
+    ? proc.stderrOutput()
+    : Promise.resolve(undefined);
 
   const [status, stdout, stderr] = await Promise.all([
     proc.status(),
@@ -151,7 +153,7 @@ async function runInternal(options: FullRunOptions): Promise<ProcessResult> {
   ]);
 
   const result: ProcessResult = { status };
-  if (isPiped) {
+  if (!isNil(stdout) || !isNil(stderr)) {
     const decoder = new TextDecoder();
     const pipedResult = result as PipedProcessResult;
     pipedResult.stdout = decoder.decode(stdout);
