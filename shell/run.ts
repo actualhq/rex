@@ -37,7 +37,7 @@ export async function $(
   command: ProcessCommand,
   options: FullUserRunOptions = {},
 ): Promise<string> {
-  const result = await runPiped(buildCommandArray(command), options);
+  const result = await $.piped(buildCommandArray(command), options);
   return result.stdout;
 }
 
@@ -48,7 +48,16 @@ export async function $(
  * @param options The {@link FullUserRunOptions} governing the behavior of the process runner
  * @returns A {@link Promise<ProcessResult>} containing the result state when the process completes.
  */
-$.run = runGeneric;
+$.run = function (
+  command: string[] | string,
+  options: FullUserRunOptions = {},
+): Promise<ProcessResult> {
+  const fullOptions: FullRunOptions = {
+    cmd: buildCommandArray(command),
+    ...options,
+  };
+  return runInternal(fullOptions);
+};
 
 /**
  * Runs a process using the piped output API.
@@ -60,7 +69,18 @@ $.run = runGeneric;
  * @param options The {@link FullUserRunOptions} governing the behavior of the process runner
  * @returns A {@link Promise<PipedProcessResult>} containing the result state and output when the process completes
  */
-$.piped = runPiped;
+$.piped = function (
+  command: string[] | string,
+  options: UserRunOptions = {},
+): Promise<PipedProcessResult> {
+  const fullOptions: PipedRunOptions = {
+    cmd: buildCommandArray(command),
+    stdout: 'piped',
+    stderr: 'piped',
+    ...options,
+  };
+  return runInternal(fullOptions);
+};
 
 /**
  * Runs a process using the streamed output API.
@@ -72,34 +92,7 @@ $.piped = runPiped;
  * @param options The {@link FullUserRunOptions} governing the behavior of the process runner
  * @returns A {@link Promise<ProcessResult>} containing the result state when the process completes
  */
-$.streamed = runStreamed;
-
-/**
- * Runs a process and checks to see if it was successful.
- *
- * @param command The {@link ProcessCommand} to be run
- * @param options The {@link FullUserRunOptions} governing the behavior of the process runner
- * @returns A {@link Promise<boolean>} that will resolve to `true` if the process had a zero exit code to indicate success
- */
-$.try = tryRun;
-
-async function tryRun(
-  command: string[] | string,
-  options: UserTryOptions = {},
-): Promise<boolean> {
-  try {
-    const result = await runPiped(command, { ...options, throwOnError: false });
-    return result.status.success;
-  } catch (err) {
-    if (err instanceof Deno.errors.NotFound) {
-      return false;
-    } else {
-      throw err;
-    }
-  }
-}
-
-function runStreamed(
+$.streamed = function (
   command: string[] | string,
   options: UserRunOptions = {},
 ): Promise<ProcessResult> {
@@ -110,31 +103,30 @@ function runStreamed(
     ...options,
   };
   return runInternal(fullOptions);
-}
+};
 
-function runPiped(
+/**
+ * Runs a process and checks to see if it was successful.
+ *
+ * @param command The {@link ProcessCommand} to be run
+ * @param options The {@link FullUserRunOptions} governing the behavior of the process runner
+ * @returns A {@link Promise<boolean>} that will resolve to `true` if the process had a zero exit code to indicate success
+ */
+$.try = async function (
   command: string[] | string,
-  options: UserRunOptions = {},
-): Promise<PipedProcessResult> {
-  const fullOptions: PipedRunOptions = {
-    cmd: buildCommandArray(command),
-    stdout: 'piped',
-    stderr: 'piped',
-    ...options,
-  };
-  return runInternal(fullOptions);
-}
-
-function runGeneric(
-  command: string[] | string,
-  options: FullUserRunOptions = {},
-): Promise<ProcessResult> {
-  const fullOptions: FullRunOptions = {
-    cmd: buildCommandArray(command),
-    ...options,
-  };
-  return runInternal(fullOptions);
-}
+  options: UserTryOptions = {},
+): Promise<boolean> {
+  try {
+    const result = await $.piped(command, { ...options, throwOnError: false });
+    return result.status.success;
+  } catch (err) {
+    if (err instanceof Deno.errors.NotFound) {
+      return false;
+    } else {
+      throw err;
+    }
+  }
+};
 
 function runInternal(options: PipedRunOptions): Promise<PipedProcessResult>;
 function runInternal(options: FullRunOptions): Promise<ProcessResult>;
