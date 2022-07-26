@@ -1,6 +1,6 @@
 export type RunType = 'piped' | 'streamed';
 
-interface ExtensionRunOptionsExtension {
+interface RunOptionsExtension {
   /** Whether to throw if the process returns an error status code. Defaults to true. */
   throwOnError?: boolean;
   /** Whether to trim off a new line at the end of the piped output, if one exists. Defaults to true. */
@@ -8,7 +8,7 @@ interface ExtensionRunOptionsExtension {
 }
 
 /** All run options built into Deno plus extension options provided by this library. */
-export type FullRunOptions = Deno.RunOptions & ExtensionRunOptionsExtension;
+export type FullRunOptions = Deno.RunOptions & RunOptionsExtension;
 
 /** All of {@link FullRunOptions} except for `cmd`, which this library separates from options. */
 export type FullUserRunOptions = Omit<FullRunOptions, 'cmd'>;
