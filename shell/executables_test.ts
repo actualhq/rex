@@ -3,7 +3,7 @@ import { makeFileExecutable } from './executables.ts';
 import { $ } from './run.ts';
 
 Deno.test({
-  name: 'new file becomes executable on unix/mac',
+  name: 'new file becomes executable on linux/mac',
   ignore: Deno.build.os === 'windows',
 }, async () => {
   const filename = await Deno.makeTempFile();

@@ -1,12 +1,9 @@
 import { $ } from './run.ts';
 
 /**
- * Makes a file executable in Linux/Unix/MacOS environments.
+ * Makes a file executable in Linux/Unix/MacOS environments by setting the executable bit.
  *
- * This includes setting the executable bit on the file, and if on MacOS, unsetting the Apple quarantine bit applied to
- * downloaded files.
- *
- * Note: This method doesn't do anything for Windows. This is because Windows typically decides whether a file is
+ * Note: This method does nothing on Windows. This is because Windows typically decides whether a file is
  * executable based on its file extension.
  *
  * @param executablePath The path to the file to make executable
@@ -17,11 +14,21 @@ export async function makeFileExecutable(executablePath: string): Promise<void> 
     return;
   }
 
-  const promises: Promise<unknown>[] = [];
-  promises.push($(['chmod', '+x', executablePath]));
-  if (Deno.build.os === 'darwin') {
-    // Use try so that this is a best effort operation
-    promises.push($.try(['xattr', '-d', 'com.apple.quarantine', executablePath]));
+  await $(['chmod', '+x', executablePath]);
+}
+
+/**
+ * Unsets the Apple quarantine bit applied to downloaded files.
+ *
+ * Note: This method does nothing on non-Mac platforms.
+ *
+ * @param filePath The path to the file to make executable
+ */
+export async function removeAppleQuarantine(filePath: string): Promise<void> {
+  if (Deno.build.os !== 'darwin') {
+    // This concept doesn't translate to non-Mac platforms
+    return;
   }
-  await Promise.all(promises);
+
+  await $(['xattr', '-d', 'com.apple.quarantine', filePath]);
 }
