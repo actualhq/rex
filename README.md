@@ -10,16 +10,16 @@ you can avoid including parts of Rex you don't depend on by only importing indiv
 of the entire module:
 
 ```typescript
-import { stripPrefix } from "https://deno.land/x/rex/lang/strings.ts";
-import { $ } from "https://deno.land/x/rex/shell/run.ts";
+import { stripPrefix } from 'https://deno.land/x/rex/lang/strings.ts';
+import { $ } from 'https://deno.land/x/rex/shell/run.ts';
 ```
 
 If you're not particularly concerned about a little bit more bloat, you can import everything you
 need from `mod.ts`:
 
 ```typescript
-import { stripPrefix } from "https://deno.land/x/rex/mod.ts";
-import { $ } from "https://deno.land/x/rex/mod.ts";
+import { stripPrefix } from 'https://deno.land/x/rex/mod.ts';
+import { $ } from 'https://deno.land/x/rex/mod.ts';
 ```
 
 ## Lodash usage
@@ -35,16 +35,16 @@ styles are supported:
 
 ```typescript
 // Recommended: Default function imports from individual files:
-import isNil from "https://cdn.skypack.dev/lodash@v4.17.21/isNil?dts";
-import clamp from "https://cdn.skypack.dev/lodash@v4.17.21/clamp?dts";
+import isNil from 'https://cdn.skypack.dev/lodash@v4.17.21/isNil?dts';
+import clamp from 'https://cdn.skypack.dev/lodash@v4.17.21/clamp?dts';
 
 // Default import of entire packaged library:
-import lodash from "https://cdn.skypack.dev/lodash@v4.17.21?dts";
-import _ from "https://cdn.skypack.dev/lodash@v4.17.21?dts";
+import lodash from 'https://cdn.skypack.dev/lodash@v4.17.21?dts';
+import _ from 'https://cdn.skypack.dev/lodash@v4.17.21?dts';
 
 // Named function imports from packaged library:
-import { isNil } from "https://cdn.skypack.dev/lodash@v4.17.21?dts";
-import { clamp } from "https://cdn.skypack.dev/lodash@v4.17.21?dts";
+import { isNil } from 'https://cdn.skypack.dev/lodash@v4.17.21?dts';
+import { clamp } from 'https://cdn.skypack.dev/lodash@v4.17.21?dts';
 ```
 
 If you use the same exact Lodash import URLs as Rex, Deno cache should recognize this and skip the
