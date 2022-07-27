@@ -18,7 +18,8 @@ export async function makeFileExecutable(executablePath: string): Promise<void> 
 }
 
 /**
- * Unsets the Apple quarantine bit applied to downloaded files.
+ * Unsets the Apple quarantine bit applied to downloaded files. This should only be run on trusted
+ * files.
  *
  * Note: This method does nothing on non-Mac platforms.
  *
