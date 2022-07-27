@@ -120,6 +120,11 @@ $.try = async function (
     const result = await $.piped(command, { ...options, throwOnError: false });
     return result.status.success;
   } catch (err) {
+    // TODO(stabai): Decide if this logic should be in `runInternal` instead
+    // TODO(stabai): Decide if we should suppress all errors this way in the try API
+
+    // If the command failed because the command was not found, Deno will throw a `NotFound` error
+    // instead of returning a process status with an exit code.
     if (err instanceof Deno.errors.NotFound) {
       return false;
     } else {
