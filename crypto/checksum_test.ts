@@ -10,12 +10,12 @@ const TEST_BINARY_DATA = hex.decode(new TextEncoder().encode(
 ));
 const TEST_BINARY_HASH = 'db8ea94d9fadffb5deaf217d25556f5c1c114b3fac46bb899ea02a6b398a4a38';
 
-Deno.test('correctly computes hash for text string', async () => {
+Deno.test('computes hash for text string', async () => {
   const hash = await checksumHex(TEST_TEXT_DATA);
   assertEquals(hash, TEST_TEXT_HASH);
 });
 
-Deno.test('correctly computes hash for text file', async () => {
+Deno.test('computes hash for text file', async () => {
   const filePath = await Deno.makeTempFile();
   await Deno.writeTextFile(filePath, TEST_TEXT_DATA);
 
@@ -27,12 +27,12 @@ Deno.test('correctly computes hash for text file', async () => {
   }
 });
 
-Deno.test('correctly computes hash for binary array', async () => {
+Deno.test('computes hash for binary array', async () => {
   const hash = await checksumHex(TEST_BINARY_DATA);
   assertEquals(hash, TEST_BINARY_HASH);
 });
 
-Deno.test('correctly computes hash for binary file', async () => {
+Deno.test('computes hash for binary file', async () => {
   const filePath = await Deno.makeTempFile();
   await Deno.writeFile(filePath, TEST_BINARY_DATA);
 
