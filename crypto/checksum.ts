@@ -13,12 +13,14 @@ export async function fileChecksumHex(
   filePath: string,
   algorithm: DigestAlgorithm = 'SHA-256',
 ): Promise<string> {
-  const file = await Deno.open(filePath, { read: true });
-  try {
-    return await checksumHex(iterateReader(file), algorithm);
-  } finally {
-    file.close();
-  }
+  const data = await Deno.readFile(filePath);
+  return await checksumHex(data, algorithm);
+  // const file = await Deno.open(filePath, { read: true });
+  // try {
+  //   return await checksumHex(iterateReader(file), algorithm);
+  // } finally {
+  //   file.close();
+  // }
 }
 
 /**
