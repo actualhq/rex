@@ -1,5 +1,4 @@
 import { checksumHex, fileChecksumHex } from './checksum.ts';
-import { hex } from '../deps.ts';
 import { assertEquals } from '../testing_deps.ts';
 
 const TEST_TEXT_DATA = 'testing 1 2 3...';
