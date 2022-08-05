@@ -1,4 +1,4 @@
-import { crypto, hex, iterateReader } from '../deps.ts';
+import { crypto, hex } from '../deps.ts';
 
 type DigestAlgorithm = Parameters<typeof crypto.subtle.digest>[0];
 
