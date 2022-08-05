@@ -1,5 +1,5 @@
 import { checksumHex, fileChecksumHex } from './checksum.ts';
-import { hex } from '../deps.ts';
+import { hex, iterateReader } from '../deps.ts';
 import { assertEquals } from '../testing_deps.ts';
 
 const TEST_TEXT_DATA = 'testing 1 2 3...';
@@ -42,4 +42,24 @@ Deno.test('correctly computes hash for binary file', async () => {
   } finally {
     await Deno.remove(filePath);
   }
+});
+
+Deno.test('async iterator reads data accurately', async () => {
+  const filePath = await Deno.makeTempFile();
+  Deno.writeFile(filePath, new TextEncoder().encode('testing 1 2 3'));
+
+  const rawContents = await Deno.readFile(filePath);
+
+  const file = await Deno.open(filePath);
+  const buffer: number[] = [];
+  try {
+    for await (const chunk of iterateReader(file)) {
+      buffer.push(...chunk);
+    }
+  } finally {
+    file.close();
+  }
+  const bufferedContents = new Uint8Array(buffer);
+
+  assertEquals(rawContents, bufferedContents);
 });
