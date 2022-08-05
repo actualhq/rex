@@ -1,4 +1,4 @@
-import { crypto, hex } from '../deps.ts';
+import { crypto, hex, iterateReader } from '../deps.ts';
 
 type DigestAlgorithm = Parameters<typeof crypto.subtle.digest>[0];
 
@@ -13,14 +13,12 @@ export async function fileChecksumHex(
   filePath: string,
   algorithm: DigestAlgorithm = 'SHA-256',
 ): Promise<string> {
-  const data = await Deno.readFile(filePath);
-  return await checksumHex(data, algorithm);
-  // const file = await Deno.open(filePath, { read: true });
-  // try {
-  //   return await checksumHex(iterateReader(file), algorithm);
-  // } finally {
-  //   file.close();
-  // }
+  const file = await Deno.open(filePath, { read: true });
+  try {
+    return await checksumHex(iterateReader(file), algorithm);
+  } finally {
+    file.close();
+  }
 }
 
 /**
