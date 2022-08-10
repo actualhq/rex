@@ -15,6 +15,7 @@ export async function fileChecksumHex(
 ): Promise<string> {
   const file = await Deno.open(filePath, { read: true });
   try {
+    // Note: This await is required to ensure all reading is finished before the reader is closed.
     return await checksumHex(iterateReader(file), algorithm);
   } finally {
     file.close();
