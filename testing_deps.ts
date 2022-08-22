@@ -49,7 +49,7 @@ export function createStaticTestHttpServer(body: BodyInit, params: ResponseInit 
 
 /** Creates an HTTP server for testing that uses the supplied handler for all requests. */
 export function createTestHttpServer(handler: (req: Request) => Response): TestServer {
-  const hostName = '0.0.0.0';
+  const hostName = 'localhost';
   const testServerPort = randomPort(hostName);
   const server = new Server({
     port: testServerPort,
