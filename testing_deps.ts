@@ -8,7 +8,6 @@ export {
   fail,
 } from 'https://deno.land/std@0.150.0/testing/asserts.ts';
 
-
 import { Server } from 'https://deno.land/std@0.150.0/http/server.ts';
 import { randomPort } from 'https://deno.land/x/getport@v2.1.2/mod.ts';
 import { isNil } from './deps.ts';
