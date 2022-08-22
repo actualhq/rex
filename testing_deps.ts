@@ -8,7 +8,9 @@ export {
   fail,
 } from 'https://deno.land/std@0.150.0/testing/asserts.ts';
 
+
 import { Server } from 'https://deno.land/std@0.150.0/http/server.ts';
+import { randomPort } from 'https://deno.land/x/getport@v2.1.2/mod.ts';
 import { isNil } from './deps.ts';
 import { checkExhaustive } from './lang/types.ts';
 
@@ -48,14 +50,15 @@ export function createStaticTestHttpServer(body: BodyInit, params: ResponseInit 
 
 /** Creates an HTTP server for testing that uses the supplied handler for all requests. */
 export function createTestHttpServer(handler: (req: Request) => Response): TestServer {
-  const testServerPort = 65432;
+  const hostName = '0.0.0.0';
+  const testServerPort = randomPort(hostName);
   const server = new Server({
     port: testServerPort,
     handler,
   });
   const servingFinished = server.listenAndServe();
   return {
-    urlOrigin: `http://0.0.0.0:${testServerPort}`,
+    urlOrigin: `http://${hostName}:${testServerPort}`,
     close: () => {
       server.close();
       return servingFinished;
