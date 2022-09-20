@@ -1,21 +1,11 @@
 import { stripSuffix } from '../lang/strings.ts';
 import { checkExhaustive } from '../lang/types.ts';
 import { fs, isNil, parseMediaType, path } from '../deps.ts';
-
-/** Contains options that control behavior when fetching a URL. */
-export interface UrlOptions {
-  url: string;
-  requestOptions?: RequestInit;
-}
-
-/** Contains options that control behavior of {@link downloadFile}. */
-export interface DownloadOptions extends UrlOptions {
-  downloadLocation: DownloadLocation;
-  mode?: number;
-}
+import { DownloadLocation, DownloadOptions, UrlOptions } from "./types.ts";
 
 /**
- * Downloads a remote URL and writes the contents to a temp file.
+ * Downloads a remote URL and writes the contents to a temp file. As with any temp file operations,
+ * the caller is responsible for cleaning up the file when done using it.
  *
  * @param url The url of the file to download
  * @returns A {@link Promise<string>} containing the full path to the downloaded file
@@ -47,7 +37,7 @@ export async function downloadFile(options: DownloadOptions): Promise<string> {
 export async function openFileFromUrl(
   options: UrlOptions,
 ): Promise<{ data: Blob; headers: Headers }> {
-  const response = await fetch(options.url, options.requestOptions);
+  const response = await fetch(options.url, options.fetchOptions);
   if (response.status !== 200) {
     const responseBody = await response.text();
     throw new Deno.errors.Http(
@@ -57,16 +47,6 @@ export async function openFileFromUrl(
   return { data: await response.blob(), headers: response.headers };
 }
 
-interface LiteralDirectory {
-  dir: string;
-}
-interface SpecialDirectory {
-  specialDir: 'temp' | 'cwd';
-}
-type DownloadLocation = (LiteralDirectory | SpecialDirectory) & {
-  filename?: string;
-};
-
 async function buildDownloadPath(options: DownloadOptions, headers: Headers): Promise<string> {
   const downloadFilename = options.downloadLocation.filename ??
     determineDownloadFilename(options.url, headers);
@@ -75,6 +55,7 @@ async function buildDownloadPath(options: DownloadOptions, headers: Headers): Pr
   await fs.ensureDir(downloadDir);
 
   if (!downloadFilename) {
+    console.warn('Unable to infer filename from URL or headers, making one up.');
     // If there was no way to choose a filename, just make one up.
     return Deno.makeTempFile({ dir: downloadDir });
   } else {

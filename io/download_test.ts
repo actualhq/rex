@@ -55,6 +55,9 @@ Deno.test('still works with no sensible default filename', async () => {
   try {
     const baseFilename = path.basename(downloadedFile);
     assertNotEquals(baseFilename, '');
+
+    const fileContents = await Deno.readTextFile(downloadedFile);
+    assertEquals(fileContents, TEST_FILE_CONTENTS);
   } finally {
     await testServer.close();
     await Deno.remove(downloadedFile);
@@ -72,6 +75,9 @@ Deno.test('uses end of URL path for default filename', async () => {
   try {
     const baseFilename = path.basename(downloadedFile);
     assertEquals(baseFilename, 'test_file.txt');
+
+    const fileContents = await Deno.readTextFile(downloadedFile);
+    assertEquals(fileContents, TEST_FILE_CONTENTS);
   } finally {
     await testServer.close();
     await Deno.remove(downloadedFile);
