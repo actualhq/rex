@@ -1,7 +1,7 @@
 import { stripSuffix } from '../lang/strings.ts';
 import { checkExhaustive } from '../lang/types.ts';
 import { fs, isNil, parseMediaType, path } from '../deps.ts';
-import { DownloadLocation, DownloadOptions, UrlOptions } from "./types.ts";
+import { DownloadLocation, DownloadOptions, UrlOptions } from './types.ts';
 
 /**
  * Downloads a remote URL and writes the contents to a temp file. As with any temp file operations,
