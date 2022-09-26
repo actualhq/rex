@@ -1,5 +1,7 @@
 export * from './crypto/checksum.ts';
 
+export * from './io/download.ts';
+
 export * from './lang/promise.ts';
 export * from './lang/strings.ts';
 export * from './lang/types.ts';
